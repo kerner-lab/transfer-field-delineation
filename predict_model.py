@@ -96,7 +96,7 @@ model = None
 if is_dilated:
     model = unet_dilated(input_size = input_shape)
 elif is_imageNet:
-    model_unet = Unet(BACKBONE, encoder_weights='imagenet')
+    model_unet = unet() #Unet(BACKBONE, encoder_weights='imagenet')
     if is_stacked: 
         new_model = tf.keras.models.Sequential()
         new_model.add(Conv2D(3, (1,1), padding='same', activation='relu', input_shape=input_shape))
@@ -132,7 +132,7 @@ get_metrics(y_true, y_pred, binarized=False)
 print(predictions.shape)
 print(predictions[0].shape)
 plt.figure()
-for i in range(0, 10):
+for i in range(0, 30):
   prediction = predictions[i]
   print(prediction)
   prediction[prediction > 0.5] = 255
