@@ -60,8 +60,8 @@ def read_centroid(original, destination, centroid_txt):
       minlon = float(row[4])
 
       grid[index]['poly'] = shapely.geometry.box(minlat, minlon, maxlat, maxlon) 
-      project = partial(pyproj.transform, original, destination)
-      grid[index]['poly'] = transform(project, grid[index]['poly'])
+      #project = partial(pyproj.transform, original, destination)
+      #grid[index]['poly'] = transform(project, grid[index]['poly'])
   return grid
 
 def is_in_parcelID_window(chosen_parcel_id, parcel_ids):
@@ -112,7 +112,7 @@ def point_is_in_bounds(point, bound):
   return False
 
 # read the shapefile
-def dump_shp_to_json(shape_file, grid, output_json='./data/sentinel/pyshp-all-2000-sentinel.json'):
+def dump_shp_to_json(shape_file, grid, output_json='./data/sentinel/pyshp-all-2000-bf_sentinel.json'):
   reader = shapefile.Reader(shape_file)
   original = Proj(fiona.open(shape_file).crs)
   print(fiona.open(shape_file).crs)
@@ -131,21 +131,24 @@ def dump_shp_to_json(shape_file, grid, output_json='./data/sentinel/pyshp-all-20
     index += 1
     geom = sr.shape.__geo_interface__
     shp_geom = shape(geom)
-
+    
     if check_polygon_in_bounds(shp_geom, grid):
       num_matched += 1
-      print(int(sr.record[0]))
+      #print(int(sr.record[0]))
       atr = dict(zip(field_names, sr.record))
-      geom['coordinates'] = listit(geom['coordinates'])
-      for index_coord in range(0, len(geom['coordinates'])):
-        for counter in range(0,len(geom['coordinates'][index_coord])):
-          x, y = geom['coordinates'][index_coord][counter]
-          long, lat = pyproj.transform (original , destination, x, y)
-          geom['coordinates'][index_coord][counter] = [lat, long] #(long, lat)
-      print("Matched:" + str(index))
-      print(sr.record[0])
-      print("Number matched:", num_matched)
-      buffer.append(dict(type="Feature", geometry=geom, properties=atr))
+      try:
+      	geom['coordinates'] = listit(geom['coordinates'])
+      	for index_coord in range(0, len(geom['coordinates'])):
+        	for counter in range(0,len(geom['coordinates'][index_coord])):
+          		x, y = geom['coordinates'][index_coord][counter]
+          		long, lat = pyproj.transform (original , destination, x, y)
+          		geom['coordinates'][index_coord][counter] = [lat, long] #(long, lat)
+      	print("Matched:" + str(index))
+      	#print(sr.record[0])
+      	print("Number matched:", num_matched)
+      	buffer.append(dict(type="Feature", geometry=geom, properties=atr))
+      except Exception:
+      	print("exception")	
   # write the GeoJSON file
   geojson = open(output_json, "w")
   geojson.write(dumps({"type": "FeatureCollection",\
@@ -154,10 +157,12 @@ def dump_shp_to_json(shape_file, grid, output_json='./data/sentinel/pyshp-all-20
 
 
 csv_file = './data/sentinel/sentinel_locations.csv'
-shape_file = './data/RPG_2-0__SHP_LAMB93_FR-2017_2017-01-01/RPG/1_DONNEES_LIVRAISON_2017/RPG_2-0_SHP_LAMB93_FR-2017/PARCELLES_GRAPHIQUES.shp'
+shape_file ='./data/polyclip/bc.shp' #./data/RPG_2-0__SHP_LAMB93_FR-2017_2017-01-01/RPG/1_DONNEES_LIVRAISON_2017/RPG_2-0_SHP_LAMB93_FR-2017/PARCELLES_GRAPHIQUES.shp'
 original = Proj(fiona.open(shape_file).crs)
 print(original)
+print(csv_file)
 destination = Proj('epsg:4326')
 reader = shapefile.Reader(shape_file)
 grid = read_csv(destination, original, csv_file)
 dump_shp_to_json(shape_file, grid)
+

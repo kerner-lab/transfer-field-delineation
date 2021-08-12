@@ -39,7 +39,7 @@ def write_to_csv(ids, file_name_split_csv, header =['image','mask'], is_fill=Tru
     if is_fill:
       sub_fill = '_filled'
     for id in ids:
-      row0 = base_dir + 'inel_tf/france_s2_patches-00007/' + str(int(id)) +'.jpeg'
+      row0 = base_dir + 'sentinel_images/' + str(int(id)) +'.jpeg'
       row1 = base_dir + 'masks' + sub_fill + '/image_binary_' + str(id) + '.png'
       rows = [row0, row1]
       csv_writer.writerow(rows)
