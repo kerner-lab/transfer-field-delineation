@@ -30,9 +30,9 @@ import cv2
 Image.MAX_IMAGE_PIXELS = None
 warnings.simplefilter('ignore', Image.DecompressionBombWarning)
 
-BACKBONE = 'resnet34'
+BACKBONE = 'resnet50'
 preprocess_input = sm.get_preprocessing(BACKBONE)
-
+print(BACKBONE)
 def learning_rate_scheduler(epoch):
     lr = 1e-4
     '''
