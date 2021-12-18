@@ -20,7 +20,7 @@ for f in filenames:
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    satellite_features = ['R', 'G', 'B']
+    satellite_features = ['B1', 'B2', 'B3']
 
     print(">>>>>> Processing: " + f)
     iterator = tf.compat.v1.python_io.tf_record_iterator(f, options=options)

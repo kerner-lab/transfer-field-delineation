@@ -60,7 +60,7 @@ def scale_coords(shape_size, geom, grid, index, size_m = 450):
 base_dir = 'data/sentinel/'
 
 csv_file = base_dir + 'sentinel_locations.csv' if len(sys.argv) < 2 else sys.argv[1]
-json_file = base_dir + 'pyshp-all_sentinel.json' if len(sys.argv) < 3 else sys.argv[2]  
+json_file = base_dir +  'pyshp-all_sentinel.json' if len(sys.argv) < 3 else sys.argv[2]  
 with open(json_file) as f:
   shp_dict = json.load(f)
 
@@ -71,14 +71,15 @@ for index in range(len(grid.keys())):
   parcel_id = grid[index]['Parcel_id']
   polys = []
   for sh_index, sh in enumerate(shp_dict['features']):
-    for coord_idx in range(len(sh['geometry']['coordinates'])):
-      try:
-      	geom = np.array(sh['geometry']['coordinates'][coord_idx])
-      	is_in_bounds, geom_fixed = scale_coords(shape_size, geom, grid, index)
-      	pts = geom_fixed.astype(int)
-      	polys.append(pts)
-      except Exception:
-      	print('exception')
+  	for coord_poly in range(len(sh['geometry']['coordinates'])):
+  		for coord_idx in range(len(sh['geometry']['coordinates'][coord_poly])):
+  			try:
+  				geom = np.array(sh['geometry']['coordinates'][coord_poly][coord_idx])
+  				is_in_bounds, geom_fixed = scale_coords(shape_size, geom, grid, index)
+  				pts = geom_fixed.astype(int)
+  				polys.append(pts)
+  			except Exception as ex:
+  				print(ex)
 
   #Creates the binary mask
   mask = np.zeros(shape_size)
@@ -96,7 +97,7 @@ for index in range(len(grid.keys())):
   #Saves the overlay file
   im_name = base_dir + 'sentinel_images/' + str(int(parcel_id)) +'.jpeg'
   print(im_name)
-  orig_image = cv2.UMat(np.flipud(np.asarray(cv2.imread(im_name))))
-  cv2.polylines(orig_image, polys, True, color=(255,255,255),thickness=2)
-  cv2.imwrite(base_dir + 'overlay/image_overlay_' + str(int(parcel_id)) + '.jpeg', cv2.flip(orig_image,0))
+  #orig_image = cv2.UMat(np.flipud(np.asarray(cv2.imread(im_name))))
+  #cv2.polylines(orig_image, polys, True, color=(255,255,255),thickness=2)
+  #cv2.imwrite(base_dir + 'overlay/image_overlay_' + str(int(parcel_id)) + '.jpeg', cv2.flip(orig_image,0))
   

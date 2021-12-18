@@ -52,7 +52,7 @@ def learning_rate_scheduler(epoch):
     return lr
 
 #Set the filepaths here for laoding in the file 
-is_fill = False
+is_fill = True
 is_stacked = True
 is_imageNet = True
 is_dilated = False
@@ -96,7 +96,7 @@ model = None
 if is_dilated:
     model = unet_dilated(input_size = input_shape)
 elif is_imageNet:
-    model_unet = unet() #Unet(BACKBONE, encoder_weights='imagenet')
+    model_unet = Unet(BACKBONE, encoder_weights='imagenet')
     if is_stacked: 
         new_model = tf.keras.models.Sequential()
         new_model.add(Conv2D(3, (1,1), padding='same', activation='relu', input_shape=input_shape))
@@ -132,12 +132,12 @@ get_metrics(y_true, y_pred, binarized=False)
 print(predictions.shape)
 print(predictions[0].shape)
 plt.figure()
-for i in range(0, 30):
+for i in range(0, 59):
   prediction = predictions[i]
-  print(prediction)
+  #print(prediction)
   prediction[prediction > 0.5] = 255
   prediction[prediction != 255] = 0
-  print(np.count_nonzero(prediction == 255))
+  #print(np.count_nonzero(prediction == 255))
   plt.imshow(prediction)
   plt.axis('off')
   plt.savefig(pred_dir + '/predict_unet' + str(test_df['image'][i].split('.jpeg')[0].split('_')[-1]) + '_pred.png',  bbox_inches = 'tight')

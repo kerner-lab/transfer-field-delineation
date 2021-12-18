@@ -27,6 +27,7 @@ import  tensorflow.keras.backend as K
 import pdb
 import cv2
 import sys
+from tensorflow.keras.layers import Flatten, Dropout
 
 Image.MAX_IMAGE_PIXELS = None
 warnings.simplefilter('ignore', Image.DecompressionBombWarning)
@@ -87,13 +88,21 @@ val_df = pd.read_csv(base_dir + val_file)
 
 model = None 
 
+# Model file path
+filepath= sys.argv[1]
+dependencies = {'f1':f1}
+print(filepath)
+model = load_model(filepath, custom_objects=dependencies)
+#for layer in model.layers:
+#     layer.trainable=False
+
 if is_dilated:
     model = unet_dilated(input_size = input_shape)
 elif is_imageNet:
-    model_unet = Unet(BACKBONE, encoder_weights='imagenet')
+    model_unet = model #Unet(BACKBONE, encoder_weights='imagenet')
     if is_stacked: 
         new_model = tf.keras.models.Sequential()
-        new_model.add(Conv2D(3, (1,1), padding='same', activation='relu', input_shape=input_shape))
+        #new_model.add(Conv2D(3, (1,1), padding='same', activation='relu', input_shape=input_shape))
         new_model.add(model_unet)
         model = new_model
     else:
@@ -105,11 +114,6 @@ model.compile(loss='binary_crossentropy',
               optimizer=Adam(lr=learning_rate_scheduler(0)),
               metrics=['acc', f1])
 
-# Model file path
-#filepath= sys.argv[1]
-#dependencies = {'f1':f1}
-#print(filepath)
-#model = load_model(filepath, custom_objects=dependencies)
 
 checkpoint = ModelCheckpoint(filepath, monitor='f1', verbose=1, save_best_only=True, mode='max')
 csv_logger = CSVLogger(csv_log_file, append=True, separator=';')

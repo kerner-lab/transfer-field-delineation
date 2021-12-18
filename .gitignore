@@ -1,0 +1,4 @@
+/data
+/data/sentinel
+/predictions
+*.pyc
