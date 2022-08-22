@@ -2,7 +2,7 @@ import csv
 import random
 import os.path
 
-base_dir = './data/sentinel/'
+base_dir = 'data/sentinel/'
 filename = base_dir + 'sentinel_locations.csv'
 train_filename = base_dir + 'parcel_segmentation_train_sentinel.csv'
 test_filename = base_dir + 'parcel_segmentation_test_sentinel.csv'
@@ -20,13 +20,14 @@ with open(filename, 'r') as f:
     if index == -1:
       continue
     ids.add(int(row[0]))
-
+  	
 ids = list(ids)
+
 random.shuffle(ids)
 train = int(0.8 * len(ids))
 test = int(0.1 * len(ids))
 val = len(ids) - train - test 
-
+print(train)
 train_ids = ids[:train]
 test_ids = ids[train:train+test]
 val_ids = ids[train+test:]

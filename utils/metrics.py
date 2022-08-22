@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.metrics import f1_score, accuracy_score, precision_recall_fscore_support
-from keras import backend as K
+from tensorflow.keras import backend as K
 #from segmentation_models.metrics import iou_score, dice_score
 
 def get_metrics(y_true, y_pred, binarized=True):
@@ -21,7 +21,7 @@ def get_metrics(y_true, y_pred, binarized=True):
 
 # https://datascience.stackexchange.com/questions/45165/how-to-get-accuracy-f1-precision-and-recall-for-a-keras-model
 def f1(y_true, y_pred):
-    import keras.backend as k
+    import tensorflow.keras.backend as k
     def recall(y_true, y_pred):
         true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
         possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
@@ -39,7 +39,7 @@ def f1(y_true, y_pred):
 
 #Simulating Dice coefficient using keras backend
 def dice_coef_sim(y_true, y_pred, smooth=1):
-    import keras.backend as k
+    import tensorflow.keras.backend as k
     y_pred_bool = K.greater(y_pred, 0.5)                                                         
     y_pred = K.cast(y_pred_bool, K.floatx())                                                     
     intersection = K.sum(K.abs(y_true * y_pred))                                                 
@@ -107,7 +107,7 @@ def evaluate_image_iou_metrics(masks_true, masks_pred, thresholds=0.5):
     return np.mean(tp / (tp + fp + fn))
 
 def cosine_similarity(predictions, doc_embeddings):
-    import keras.backend as k
+    import tensorflow.keras.backend as k
     
     num = K.sum(predictions * doc_embeddings, axis=-1,keepdims=True)
     den = K.sqrt(K.sum(predictions * predictions, axis=-1, keepdims=True)) * K.sqrt(K.sum(doc_embeddings * doc_embeddings, axis=-1, keepdims=True))

@@ -132,7 +132,7 @@ get_metrics(y_true, y_pred, binarized=False)
 print(predictions.shape)
 print(predictions[0].shape)
 plt.figure()
-for i in range(0, 59):
+for i in range(0, 210):
   prediction = predictions[i]
   #print(prediction)
   prediction[prediction > 0.5] = 255

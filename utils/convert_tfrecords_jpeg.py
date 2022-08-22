@@ -20,7 +20,7 @@ for f in filenames:
     if not os.path.exists(output_directory):
         os.makedirs(output_directory)
 
-    satellite_features = ['R', 'G', 'B']
+    satellite_features = ['B2', 'B3', 'B4']
 
     print(">>>>>> Processing: " + f)
     iterator = tf.compat.v1.python_io.tf_record_iterator(f, options=options)
@@ -53,7 +53,7 @@ for f in filenames:
                     feature = np.flip(feature, axis=0)
                     features.append(feature)
 
-                csv_writer.writerow([idx, max_lat, max_lon, min_lat, min_lon])
+                csv_writer.writerow([idx, max_lat*10000, max_lon*10000, min_lat*10000, min_lon*10000])
                 image = np.concatenate(features, axis=2)
                 image = image[:224, :224, :]
 
