@@ -6,9 +6,9 @@ To evaluate a model, you can use the predict_model.py script. This script takes 
 
 To prepare the dataset, you can use the following scripts:
 
-utils/sample_shp.py: This script samples random polygons from the French polygons dataset.
-utils/get_centroid.py: This script reads the shape file to get the centroid of each polygon.
-utils/convert_tfrecords_jpeg.py: This script extracts jpegs from the tfrecord format satellite images and also creates a CSV file that contains the max lat, max lon, min lat, and min lon of each image.
-utils/shp2geo.py: This script gets only polygons that overlap in bounds of extracted images.
-utils/create_mask.py: This script creates the masks (boundary and filled) of the extracted polygons and images.
-utils/split_data.py: This script splits the data into train/test/val sets.
+# utils/sample_shp.py: This script samples random polygons from the French polygons dataset.
+# utils/get_centroid.py: This script reads the shape file to get the centroid of each polygon.
+# utils/convert_tfrecords_jpeg.py: This script extracts jpegs from the tfrecord format satellite images and also creates a CSV file that contains the max lat, max lon, min lat, and min lon of each image.
+# utils/shp2geo.py: This script gets only polygons that overlap in bounds of extracted images.
+# utils/create_mask.py: This script creates the masks (boundary and filled) of the extracted polygons and images.
+# utils/split_data.py: This script splits the data into train/test/val sets.
