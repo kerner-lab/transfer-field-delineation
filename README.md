@@ -1,21 +1,110 @@
-## Parcel Delineation
+# Multi-Region Transfer Learning for Segmentation of Crop Field Boundaries in Satellite Images with Limited Labels
 
-This is a modified Python code repository for parcel delineation using satellite imagery. It contains scripts for training and evaluating U-Net models, as well as for preparing the dataset.
+Authors: Hannah Rae Kerner, Saketh Sundar, Manthan Satish
 
-To train a model, you can use the train_unet.py script. This script has a number of parameters that you can tweak, such as whether to use a dilated U-Net, a pretrained U-Net, or a stacked U-Net. By default, the model uses a pretrained stacked U-Net.
+This repository contains the code implementation for the paper "Multi-Region Transfer Learning for Segmentation of Crop Field Boundaries in Satellite Images with Limited Labels" accepted at the 2023 AAAI Workshop on AI to Accelerate Science and Engineering (AI2ASE) 2023.
 
-To evaluate a model, you can use the predict_model.py script. This script takes as input the path to the saved model and the path to a CSV file that contains the paths to the images and masks that you want to evaluate. The script will output the prediction numpy array of the model, as well as the F1 score and accuracy.
+## Usage
 
-To prepare the dataset, you can use the following scripts:
+### Environment Setup
 
-utils/sample_shp.py: This script samples random polygons from the French polygons dataset.
+To create a new environment, utilize the provided YAML file:
 
-utils/get_centroid.py: This script reads the shape file to get the centroid of each polygon.
+```bash
+conda env create -f environment.yml
+```
 
-utils/convert_tfrecords_jpeg.py: This script extracts jpegs from the tfrecord format satellite images and also creates a CSV file that contains the max lat, max lon, min lat, and min lon of each image.
+### Downloading Data
 
-utils/shp2geo.py: This script gets only polygons that overlap in bounds of extracted images.
+Use the links below to download the data for each region. Some contain only the labels while others contain the images as well
+- [Labels for Rwanda](https://beta.source.coop/nasa/rwanda-field-boundary-competition/)
+- [Labels for Kenya](https://beta.source.coop/radiantearth/african-crops-kenya-01/)
+- [Labels for France](https://www.data.gouv.fr/fr/datasets/registre-parcellaire-graphique-rpg-contours-des-parcelles-et-ilots-culturaux-et-leur-groupe-de-cultures-majoritaire/)
+- [Data for France](https://sustainlab-group.github.io/sustainbench/docs/datasets/sdg2/field_delineation.html)
+<!-- - [Data for South Africa]() -->
 
-utils/create_mask.py: This script creates the masks (boundary and filled) of the extracted polygons and images.
+Place the downloaded data in the `data` folder.
 
-utils/split_data.py: This script splits the data into train/test/val sets.
+#### Download Images from Google Earth Engine (GEE):
+
+Utilize the `.js` script located in `data_helpers/gee_images_downloader.js` to download images from Google Earth Engine.
+
+### Processing Data
+
+The data should be stored in the `data` folder. It will be stored in the following structure:
+- **images_mar**, **images_jun**, **images_sep**: Directories containing satellite images corresponding to different months (March, June, September).
+- **masks**: Directory containing labeled masks or ground truth data for crop field boundaries.
+- **masks_filled**: Directory potentially filled with processed or augmented mask data if applicable.
+
+It will look something like this:
+
+```
+data
+├── country
+│   ├── images_mar
+│   │   ├── image_1.png
+│   │   ├── image_2.png
+│   │   ├── ...
+│   ├── images_jun
+│   │   ├── image_1.png
+│   │   ├── image_2.png
+│   │   ├── ...
+│   ├── images_sep
+│   │   ├── image_1.png
+│   │   ├── image_2.png
+│   │   ├── ...
+│   ├── masks
+│   │   ├── image_1.png
+│   │   ├── image_2.png
+│   │   ├── ...
+│   ├── masks_filled
+│   │   ├── image_1.png
+│   │   ├── image_2.png
+│   │   ├── ...
+├── ...
+```
+
+### Training
+
+To train the model, run the following command:
+
+```bash
+python train.py --config config.yaml
+```
+
+### Fine Tuning
+
+To fine tune the model, run the following command:
+
+```bash
+python fine_tune.py --config config.yaml
+```
+
+### Testing
+
+To test the model, run the following command:
+
+```bash
+python test.py --config config.yaml
+```
+
+### Inference
+
+To run inference on the model, run the following command:
+
+```bash
+python inference.py --config config.yaml
+```
+
+## Citation
+
+If you find this repository useful in your research, please cite our paper:
+
+```bibtex
+@article{hkerner2023multitlf,
+    title={Multi-Region Transfer Learning for Segmentation of Crop Field Boundaries in Satellite Images with Limited Labels},
+    author={Satish, Manthan and Kerner, Hannah Rae and Sundar, Saketh},
+    journal={AAAI Workshop on AI to Accelerate Science and Engineering (AI2ASE)},
+    year={2023}
+}
+```

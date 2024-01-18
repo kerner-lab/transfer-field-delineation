@@ -1,0 +1,21 @@
+model:
+  name: "UNetResNet50_9"
+  save_name: "UNetResNet50_9"
+
+
+training:
+  batch_size: 64
+  learning_rate: 0.001
+  num_epochs: 100
+
+
+fine_tuning:
+  batch_size: 64
+  learning_rate: 0.001
+  num_epochs: 50
+
+
+data:
+  dataset: "ThreeSeasonDataset"
+  train_path: "data/france/sentinel/"
+  fine_tuning_path: "data/south_africa/sentinel/"
