@@ -103,7 +103,7 @@ If you find this repository useful in your research, please cite our paper:
 ```bibtex
 @article{hkerner2023multitlf,
     title={Multi-Region Transfer Learning for Segmentation of Crop Field Boundaries in Satellite Images with Limited Labels},
-    author={Satish, Manthan and Kerner, Hannah Rae and Sundar, Saketh},
+    author={Kerner, Hannah Rae and Sundar, Saketh and Satish, Manthan},
     journal={AAAI Workshop on AI to Accelerate Science and Engineering (AI2ASE)},
     year={2023}
 }
